@@ -1,13 +1,13 @@
-package ru.sibsutis.lab_results;
+package ru.sibsutis.pet_health_analyzer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LabResultsApplication {
+public class PetAnalyzerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LabResultsApplication.class, args);
+		SpringApplication.run(PetAnalyzerApplication.class, args);
 	}
 
 }
