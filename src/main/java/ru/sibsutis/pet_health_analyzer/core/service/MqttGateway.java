@@ -7,8 +7,4 @@ import org.springframework.messaging.handler.annotation.Header;
 @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
 public interface MqttGateway {
     void sendToMqtt(String data, @Header(MqttHeaders.TOPIC) String topic);
-
-    default void sendToMqtt(String data) {
-        sendToMqtt(data, null);
-    }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 public class AnalysisResult {
     private String petId;
     private boolean isAnomaly;
+    private int anomalyClass;
     private String anomalyType;
     private Map<String, Object> details;
     private Long timestamp;

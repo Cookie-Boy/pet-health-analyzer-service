@@ -8,10 +8,8 @@ import java.util.List;
 public class LabResult {
     private String id;
 
-    private LabTest labTest;
     private LocalDateTime testDate;
     private String resultValue;
     private String pdfReportPath;
     private Boolean aiProcessed;
-    private List<AiAnalysisResult> aiAnalysisResults;
 }

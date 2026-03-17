@@ -2,6 +2,8 @@ package ru.sibsutis.pet_health_analyzer.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,17 @@ public class PetAnalyzerService {
 
     private final MqttGateway mqttGateway;
     private final ObjectMapper objectMapper;
+    private final ModelAnalyzer modelAnalyzer;
 
-    public PetAnalyzerService(MqttGateway mqttGateway, ObjectMapper objectMapper) {
+    @Value("${mqtt.outbound.topic}")
+    private String outboundTopic;
+
+    @Autowired
+    public PetAnalyzerService(MqttGateway mqttGateway,
+                              ModelAnalyzer modelAnalyzer) {
         this.mqttGateway = mqttGateway;
-        this.objectMapper = objectMapper;
+        this.objectMapper = new ObjectMapper();
+        this.modelAnalyzer = modelAnalyzer;
     }
 
     @ServiceActivator(inputChannel = "mqttInboundChannel")
@@ -26,23 +35,17 @@ public class PetAnalyzerService {
         try {
             VitalData vitalData = objectMapper.readValue(payload, VitalData.class);
 
-            // 2. Вызываем Python-модель (или встроенный анализатор) для определения аномалий
-            AnalysisResult result = analyzeVitalData(vitalData);
+            AnalysisResult result = modelAnalyzer.analyze(vitalData);
 
             saveAnalysisResult(result);
 
             if (result.isAnomaly()) {
                 String resultJson = objectMapper.writeValueAsString(result);
-                mqttGateway.sendToMqtt(resultJson, "pet/analyzed");
+                mqttGateway.sendToMqtt(resultJson, outboundTopic);
             }
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
         }
-    }
-
-    private AnalysisResult analyzeVitalData(VitalData data) {
-        // Здесь логика вызова модели или встроенного анализа
-        // Возвращает объект AnalysisResult с petId, isAnomaly, anomalyType и т.д.
     }
 
     private void saveAnalysisResult(AnalysisResult result) {

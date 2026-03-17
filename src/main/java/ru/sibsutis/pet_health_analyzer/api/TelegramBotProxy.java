@@ -24,9 +24,9 @@ public class TelegramBotProxy {
 
     @Autowired
     public TelegramBotProxy(OAuth2AuthorizedClientManager clientManager,
-                            RestClient.Builder builder) {
+                            RestClient restClient) {
         this.clientManager = clientManager;
-        this.restClient = builder.build();
+        this.restClient = restClient;
     }
 
     private String getFreshToken() {

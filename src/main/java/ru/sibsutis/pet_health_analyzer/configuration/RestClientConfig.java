@@ -8,9 +8,10 @@ import org.springframework.web.client.RestClient;
 public class RestClientConfig {
 
     @Bean
-    public RestClient.Builder restClientBuilder() {
+    public RestClient restClient() {
         return RestClient.builder()
                 .defaultHeader("Content-Type", "application/json")
-                .requestInterceptor((request, body, execution) -> execution.execute(request, body));
+                .requestInterceptor((request, body, execution) -> execution.execute(request, body))
+                .build();
     }
 }
