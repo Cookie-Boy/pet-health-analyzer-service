@@ -2,6 +2,8 @@ package ru.sibsutis.pet_health_analyzer.core.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class PetResult {
     private int anomalyClass;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AnomalyType anomalyType;
 
     @Column
@@ -48,6 +51,7 @@ public class PetResult {
     private Double lon;
 
     @Column
+    @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> details;
 
     @Column
