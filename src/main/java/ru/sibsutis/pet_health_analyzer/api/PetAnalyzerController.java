@@ -35,9 +35,10 @@ public class PetAnalyzerController {
         return ResponseEntity.ok(latestVitals);
     }
 
+    // Think about it
     @GetMapping("/recommendations/{petId}")
     public ResponseEntity<List<RecommendationDto>> getRecommendations(@PathVariable String petId) {
-        List<RecommendationDto> recommendations = petAnalyzerService.getRecommendations(petId);
+        List<RecommendationDto> recommendations = List.of(petAnalyzerService.getRecommendations(petId, Period.DAY));
         return ResponseEntity.ok(recommendations);
     }
 
@@ -46,7 +47,7 @@ public class PetAnalyzerController {
             @PathVariable String petId,
             @RequestParam(defaultValue = "week") Period period) {
 
-        RecommendationDto recommendation = petAnalyzerService.generateRecommendations(petId, period);
+        RecommendationDto recommendation = petAnalyzerService.getRecommendations(petId, period);
         return ResponseEntity.ok(recommendation);
     }
 }
