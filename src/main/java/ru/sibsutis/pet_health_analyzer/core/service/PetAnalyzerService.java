@@ -87,7 +87,7 @@ public class PetAnalyzerService {
                 .respiratoryRate(vitalsDto.getRespiratoryRate())
                 .temperature(vitalsDto.getTemperature())
                 .activityLevel(vitalsDto.getActivityLevel())
-                .location(vitalsDto.getLocation())
+                .distanceFromHome(vitalsDto.getDistanceFromHome())
                 .isAnomalous(vitalsDto.getIsAnomalous())
                 .anomalyReason(vitalsDto.getAnomalyReason())
                 .collarStatus(collarStatus)

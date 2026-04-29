@@ -45,10 +45,7 @@ public class PetResult {
     private AnomalyType anomalyType;
 
     @Column
-    private Double lat;
-
-    @Column
-    private Double lon;
+    private Double distanceFromHome;
 
     @Column
     @JdbcTypeCode(SqlTypes.JSON)

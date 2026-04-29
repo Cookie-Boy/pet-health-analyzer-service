@@ -69,16 +69,17 @@ public class ModelAnalyzer {
             }
 
             Map<String, Object> details = new HashMap<>();
-            details.put("heartRate", petVital.getHeartRate());
-            details.put("respiration", petVital.getRespiration());
-            details.put("temperature", petVital.getTemperature());
             details.put("probabilities", response.getProbabilities());
 
             return PetResult.builder()
                     .petId(petVital.getPetId())
+                    .heartRate(petVital.getHeartRate())
+                    .respiration(petVital.getRespiration())
+                    .temperature(petVital.getTemperature())
                     .isAnomalous(response.getAnomalyClass() != 0)
                     .anomalyClass(response.getAnomalyClass())
                     .anomalyType(AnomalyType.fromCode(response.getAnomalyClass()))
+                    .distanceFromHome(petVital.getDistanceFromHome())
                     .details(details)
                     .timestamp(Instant.now().getEpochSecond())
                     .build();

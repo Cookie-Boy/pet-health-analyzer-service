@@ -31,8 +31,7 @@
             <column name="anomaly_type" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="lat" type="float(53)"/>
-            <column name="lon" type="float(53)"/>
+            <column name="distance_from_home" type="float(53)"/>
             <column name="details" type="jsonb"/>
             <column name="timestamp" type="bigint"/>
         </createTable>

@@ -22,7 +22,7 @@ public class PetResultDto {
     private Integer respiratoryRate;
     private Double temperature;
     private Integer activityLevel;
-    private LocationDto location;
+    private Double distanceFromHome;
     private Boolean isAnomalous;
     private String anomalyReason;
 
@@ -55,14 +55,6 @@ public class PetResultDto {
             );
         }
 
-        LocationDto location = null;
-        if (entity.getLat() != null || entity.getLon() != null) {
-            location = LocationDto.builder()
-                    .lat(entity.getLat())
-                    .lon(entity.getLon())
-                    .build();
-        }
-
         return PetResultDto.builder()
                 .timestamp(timestampStr)
                 .petId(entity.getPetId())
@@ -70,7 +62,7 @@ public class PetResultDto {
                 .respiratoryRate(entity.getRespiration())
                 .temperature(entity.getTemperature())
                 .activityLevel(activityLevel)
-                .location(location)
+                .distanceFromHome(entity.getDistanceFromHome())
                 .isAnomalous(entity.isAnomalous())
                 .anomalyReason(anomalyReason)
                 .build();
