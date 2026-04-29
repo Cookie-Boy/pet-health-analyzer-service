@@ -12,7 +12,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VitalData {
+public class PetVital {
     private String petId;
     private String species;
     private String breed;

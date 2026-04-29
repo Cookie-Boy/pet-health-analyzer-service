@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.sibsutis.pet_health_analyzer.core.model.AnalysisResult;
+import ru.sibsutis.pet_health_analyzer.core.model.PetResult;
 import ru.sibsutis.pet_health_analyzer.core.model.AnomalyType;
-import ru.sibsutis.pet_health_analyzer.core.model.VitalData;
+import ru.sibsutis.pet_health_analyzer.core.model.PetVital;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -42,24 +42,24 @@ public class ModelAnalyzer {
                 .build();
     }
 
-    public AnalysisResult analyze(VitalData vitalData) {
+    public PetResult analyze(PetVital petVital) {
 
-        if (vitalData.getHeartRate() < minHeartRate || vitalData.getHeartRate() > maxHeartRate) {
-            return buildAnomalyResult(vitalData, 1, Map.of("heartRate", vitalData.getHeartRate()));
+        if (petVital.getHeartRate() < minHeartRate || petVital.getHeartRate() > maxHeartRate) {
+            return buildAnomalyResult(petVital, 1, Map.of("heartRate", petVital.getHeartRate()));
         }
 
-        if (vitalData.getHeartRate() < minRespiration || vitalData.getHeartRate() > maxRespiration) {
-            return buildAnomalyResult(vitalData, 2, Map.of("respiration", vitalData.getRespiration()));
+        if (petVital.getHeartRate() < minRespiration || petVital.getHeartRate() > maxRespiration) {
+            return buildAnomalyResult(petVital, 2, Map.of("respiration", petVital.getRespiration()));
         }
 
-        if (vitalData.getDistanceFromHome() > maxDistanceFromHome) {
-            return buildAnomalyResult(vitalData, 4, Map.of("distance", vitalData.getDistanceFromHome()));
+        if (petVital.getDistanceFromHome() > maxDistanceFromHome) {
+            return buildAnomalyResult(petVital, 4, Map.of("distance", petVital.getDistanceFromHome()));
         }
 
         try {
             PredictionResponse response = webClient.post()
                     .uri("/predict")
-                    .bodyValue(vitalData)
+                    .bodyValue(petVital)
                     .retrieve()
                     .bodyToMono(PredictionResponse.class)
                     .block();
@@ -69,14 +69,14 @@ public class ModelAnalyzer {
             }
 
             Map<String, Object> details = new HashMap<>();
-            details.put("heartRate", vitalData.getHeartRate());
-            details.put("respiration", vitalData.getRespiration());
-            details.put("temperature", vitalData.getTemperature());
+            details.put("heartRate", petVital.getHeartRate());
+            details.put("respiration", petVital.getRespiration());
+            details.put("temperature", petVital.getTemperature());
             details.put("probabilities", response.getProbabilities());
 
-            return AnalysisResult.builder()
-                    .petId(vitalData.getPetId())
-                    .isAnomaly(response.getAnomalyClass() != 0)
+            return PetResult.builder()
+                    .petId(petVital.getPetId())
+                    .isAnomalous(response.getAnomalyClass() != 0)
                     .anomalyClass(response.getAnomalyClass())
                     .anomalyType(AnomalyType.fromCode(response.getAnomalyClass()))
                     .details(details)
@@ -84,20 +84,20 @@ public class ModelAnalyzer {
                     .build();
 
         } catch (Exception e) {
-            log.error("Error calling Python service for petId: {}", vitalData.getPetId(), e);
-            return buildErrorResult(vitalData, e.getMessage());
+            log.error("Error calling Python service for petId: {}", petVital.getPetId(), e);
+            return buildErrorResult(petVital, e.getMessage());
         }
     }
 
-    private AnalysisResult buildAnomalyResult(VitalData vitalData, int anomalyClass, Map<String, Object> specificDetails) {
+    private PetResult buildAnomalyResult(PetVital petVital, int anomalyClass, Map<String, Object> specificDetails) {
         Map<String, Object> details = new HashMap<>(specificDetails);
-        details.put("heartRate", vitalData.getHeartRate());
-        details.put("respiration", vitalData.getRespiration());
-        details.put("temperature", vitalData.getTemperature());
+        details.put("heartRate", petVital.getHeartRate());
+        details.put("respiration", petVital.getRespiration());
+        details.put("temperature", petVital.getTemperature());
 
-        return AnalysisResult.builder()
-                .petId(vitalData.getPetId())
-                .isAnomaly(true)
+        return PetResult.builder()
+                .petId(petVital.getPetId())
+                .isAnomalous(true)
                 .anomalyClass(anomalyClass)
                 .anomalyType(AnomalyType.fromCode(anomalyClass))
                 .details(details)
@@ -105,10 +105,10 @@ public class ModelAnalyzer {
                 .build();
     }
 
-    private AnalysisResult buildErrorResult(VitalData vitalData, String errorMessage) {
-        return AnalysisResult.builder()
-                .petId(vitalData.getPetId())
-                .isAnomaly(false)
+    private PetResult buildErrorResult(PetVital petVital, String errorMessage) {
+        return PetResult.builder()
+                .petId(petVital.getPetId())
+                .isAnomalous(false)
                 .anomalyClass(0)
                 .anomalyType(AnomalyType.NORMAL)
                 .details(Map.of("error", errorMessage))

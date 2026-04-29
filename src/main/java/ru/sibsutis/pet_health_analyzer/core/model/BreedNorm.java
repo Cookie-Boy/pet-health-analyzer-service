@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import lombok.Data;
 
+@Deprecated
 @Document(collection = "breed_norms")
 @Data
 @CompoundIndexes({
