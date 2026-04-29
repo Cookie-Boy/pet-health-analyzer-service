@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="001-create-pet-results-table" author="cool_developer">
+        <createTable tableName="pet_results">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pet_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="heart_rate" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="respiration" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature" type="float(53)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_anomalous" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anomaly_class" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anomaly_type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lat" type="float(53)"/>
+            <column name="lon" type="float(53)"/>
+            <column name="details" type="jsonb"/>
+            <column name="timestamp" type="bigint"/>
+        </createTable>
+
+        <createIndex tableName="pet_results" indexName="idx_pet_results_pet_id">
+            <column name="pet_id"/>
+        </createIndex>
+
+        <createIndex tableName="pet_results" indexName="idx_pet_results_timestamp">
+            <column name="timestamp"/>
+        </createIndex>
+
+        <createIndex tableName="pet_results" indexName="idx_pet_results_is_anomalous">
+            <column name="is_anomalous"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
