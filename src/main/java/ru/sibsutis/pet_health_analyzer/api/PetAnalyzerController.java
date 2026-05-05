@@ -31,6 +31,7 @@ public class PetAnalyzerController {
 
     @GetMapping("/vitals/{petId}/latest")
     public ResponseEntity<LatestPetResultDto> getLatestVitals(@PathVariable String petId) {
+        log.info("Got the request: getLatestVitals method");
         LatestPetResultDto latestVitals = petAnalyzerService.getLatestVitals(petId);
         return ResponseEntity.ok(latestVitals);
     }
@@ -45,9 +46,10 @@ public class PetAnalyzerController {
     @PostMapping("/analyze/{petId}")
     public ResponseEntity<RecommendationDto> analyzeAndGenerateRecommendations(
             @PathVariable String petId,
-            @RequestParam(defaultValue = "week") Period period) {
+            @RequestParam(defaultValue = "week") String period) {
 
-        RecommendationDto recommendation = petAnalyzerService.getRecommendations(petId, period);
+        Period periodEnum = Period.fromString(period);
+        RecommendationDto recommendation = petAnalyzerService.getRecommendations(petId, periodEnum);
         return ResponseEntity.ok(recommendation);
     }
 }
