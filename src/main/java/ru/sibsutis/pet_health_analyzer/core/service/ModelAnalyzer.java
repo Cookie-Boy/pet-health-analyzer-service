@@ -1,25 +1,25 @@
 package ru.sibsutis.pet_health_analyzer.core.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import ru.sibsutis.pet_health_analyzer.api.client.PythonServiceClient;
+import ru.sibsutis.pet_health_analyzer.api.dto.PredictionDto;
 import ru.sibsutis.pet_health_analyzer.core.model.PetResult;
 import ru.sibsutis.pet_health_analyzer.core.model.AnomalyType;
 import ru.sibsutis.pet_health_analyzer.core.model.PetVital;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ModelAnalyzer {
 
-    private final WebClient webClient;
+    private final PythonServiceClient pythonServiceClient;
 
     @Value("${thresholds.heart-rate-max}")
     private int maxHeartRate;
@@ -42,12 +42,6 @@ public class ModelAnalyzer {
     @Value("${thresholds.distance-from-home-max}")
     private int maxDistanceFromHome;
 
-    public ModelAnalyzer(@Value("${python.url}") String pythonServiceUrl) {
-        this.webClient = WebClient.builder()
-                .baseUrl(pythonServiceUrl)
-                .build();
-    }
-
     public PetResult analyze(PetVital petVital) {
 
         if (petVital.getHeartRate() < minHeartRate || petVital.getHeartRate() > maxHeartRate) {
@@ -67,12 +61,7 @@ public class ModelAnalyzer {
         }
 
         try {
-            PredictionResponse response = webClient.post()
-                    .uri("/predict")
-                    .bodyValue(petVital)
-                    .retrieve()
-                    .bodyToMono(PredictionResponse.class)
-                    .block();
+            PredictionDto response = pythonServiceClient.predict(petVital);
 
             if (response == null) {
                 throw new RuntimeException("Empty response from Python service");
@@ -130,12 +119,5 @@ public class ModelAnalyzer {
                 .details(Map.of("error", errorMessage))
                 .timestamp(Instant.now().getEpochSecond())
                 .build();
-    }
-
-    @Setter
-    @Getter
-    private static class PredictionResponse {
-        private int anomalyClass;
-        private List<Double> probabilities;
     }
 }
