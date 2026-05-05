@@ -33,6 +33,12 @@ public class ModelAnalyzer {
     @Value("${thresholds.respiration-min}")
     private int minRespiration;
 
+    @Value("${thresholds.temperature-max}")
+    private int maxTemperature;
+
+    @Value("${thresholds.temperature-min}")
+    private int minTemperature;
+
     @Value("${thresholds.distance-from-home-max}")
     private int maxDistanceFromHome;
 
@@ -48,8 +54,12 @@ public class ModelAnalyzer {
             return buildAnomalyResult(petVital, 1, Map.of("heartRate", petVital.getHeartRate()));
         }
 
-        if (petVital.getHeartRate() < minRespiration || petVital.getHeartRate() > maxRespiration) {
+        if (petVital.getRespiration() < minRespiration || petVital.getRespiration() > maxRespiration) {
             return buildAnomalyResult(petVital, 2, Map.of("respiration", petVital.getRespiration()));
+        }
+
+        if (petVital.getTemperature() < minTemperature || petVital.getTemperature() > maxTemperature) {
+            return buildAnomalyResult(petVital, 3, Map.of("temperature", petVital.getTemperature()));
         }
 
         if (petVital.getDistanceFromHome() > maxDistanceFromHome) {
@@ -92,15 +102,16 @@ public class ModelAnalyzer {
 
     private PetResult buildAnomalyResult(PetVital petVital, int anomalyClass, Map<String, Object> specificDetails) {
         Map<String, Object> details = new HashMap<>(specificDetails);
-        details.put("heartRate", petVital.getHeartRate());
-        details.put("respiration", petVital.getRespiration());
-        details.put("temperature", petVital.getTemperature());
 
         return PetResult.builder()
                 .petId(petVital.getPetId())
+                .heartRate(petVital.getHeartRate())
+                .respiration(petVital.getRespiration())
+                .temperature(petVital.getTemperature())
                 .isAnomalous(true)
                 .anomalyClass(anomalyClass)
                 .anomalyType(AnomalyType.fromCode(anomalyClass))
+                .distanceFromHome(petVital.getDistanceFromHome())
                 .details(details)
                 .timestamp(Instant.now().getEpochSecond())
                 .build();
@@ -109,9 +120,13 @@ public class ModelAnalyzer {
     private PetResult buildErrorResult(PetVital petVital, String errorMessage) {
         return PetResult.builder()
                 .petId(petVital.getPetId())
+                .heartRate(petVital.getHeartRate())
+                .respiration(petVital.getRespiration())
+                .temperature(petVital.getTemperature())
                 .isAnomalous(false)
                 .anomalyClass(0)
                 .anomalyType(AnomalyType.NORMAL)
+                .distanceFromHome(petVital.getDistanceFromHome())
                 .details(Map.of("error", errorMessage))
                 .timestamp(Instant.now().getEpochSecond())
                 .build();
