@@ -34,10 +34,10 @@ public class ModelAnalyzer {
     private int minRespiration;
 
     @Value("${thresholds.temperature-max}")
-    private int maxTemperature;
+    private double maxTemperature;
 
     @Value("${thresholds.temperature-min}")
-    private int minTemperature;
+    private double minTemperature;
 
     @Value("${thresholds.distance-from-home-max}")
     private int maxDistanceFromHome;
