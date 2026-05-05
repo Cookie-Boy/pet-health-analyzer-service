@@ -23,9 +23,11 @@ public class PetAnalyzerController {
     @GetMapping("/vitals/{petId}")
     public ResponseEntity<List<PetResultDto>> getVitalsHistory(
             @PathVariable String petId,
-            @RequestParam(defaultValue = "day") Period period) {
+            @RequestParam(defaultValue = "day") String period) {
 
-        List<PetResultDto> history = petAnalyzerService.getVitalsHistory(petId, period);
+        log.info("Got the request: getVitalsHistory method");
+        Period periodEnum = Period.fromString(period);
+        List<PetResultDto> history = petAnalyzerService.getVitalsHistory(petId, periodEnum);
         return ResponseEntity.ok(history);
     }
 
@@ -48,6 +50,7 @@ public class PetAnalyzerController {
             @PathVariable String petId,
             @RequestParam(defaultValue = "week") String period) {
 
+        log.info("Got the request: analyzeAndGenerateRecommendations method");
         Period periodEnum = Period.fromString(period);
         RecommendationDto recommendation = petAnalyzerService.getRecommendations(petId, periodEnum);
         return ResponseEntity.ok(recommendation);
