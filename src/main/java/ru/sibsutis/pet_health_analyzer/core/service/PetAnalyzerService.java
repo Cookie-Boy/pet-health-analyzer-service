@@ -237,13 +237,13 @@ public class PetAnalyzerService {
                     .collect(Collectors.groupingBy(PetResult::getAnomalyType, Collectors.counting()));
 
             if (!anomalyTypes.isEmpty()) {
-                summary.append("Основные проблемы: ");
+                summary.append("Основные проблемы:\n");
                 anomalyTypes.entrySet().stream()
                         .limit(3)
-                        .forEach(entry -> summary.append(entry.getKey().getDescription())
-                                .append(" (").append(entry.getValue()).append(" раз), "));
-                summary.setLength(summary.length() - 2);
-                summary.append(". ");
+                        .forEach(entry -> summary.append("• ")
+                                .append(entry.getKey().getDescription())
+                                .append(" (").append(entry.getValue()).append(" раз)\n"));
+                summary.append("\n");
             }
         }
 
