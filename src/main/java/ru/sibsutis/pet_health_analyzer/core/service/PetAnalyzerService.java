@@ -241,7 +241,7 @@ public class PetAnalyzerService {
                 anomalyTypes.entrySet().stream()
                         .limit(3)
                         .forEach(entry -> summary.append("• ")
-                                .append(entry.getKey().getDescription())
+                                .append(entry.getKey().getFriendlyDescription())
                                 .append(" (").append(entry.getValue()).append(" раз)\n"));
                 summary.append("\n");
             }
