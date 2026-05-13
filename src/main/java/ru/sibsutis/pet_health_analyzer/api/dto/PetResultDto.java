@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.sibsutis.pet_health_analyzer.core.model.Location;
 import ru.sibsutis.pet_health_analyzer.core.model.PetResult;
 
 import java.time.Instant;
@@ -22,7 +23,7 @@ public class PetResultDto {
     private Integer respiratoryRate;
     private Double temperature;
     private Integer activityLevel;
-    private Double distanceFromHome;
+    private Location location;
     private Boolean isAnomalous;
     private String anomalyReason;
 
@@ -62,7 +63,7 @@ public class PetResultDto {
                 .respiratoryRate(entity.getRespiration())
                 .temperature(entity.getTemperature())
                 .activityLevel(activityLevel)
-                .distanceFromHome(entity.getDistanceFromHome())
+                .location(entity.getLocation())
                 .isAnomalous(entity.isAnomalous())
                 .anomalyReason(anomalyReason)
                 .build();

@@ -1,9 +1,7 @@
 package ru.sibsutis.pet_health_analyzer.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import ru.sibsutis.pet_health_analyzer.core.model.Location;
 import ru.sibsutis.pet_health_analyzer.core.model.PetResult;
 
 import java.time.Instant;
@@ -22,7 +20,7 @@ public class LatestPetResultDto {
     private Integer respiratoryRate;
     private Double temperature;
     private Integer activityLevel;
-    private Double distanceFromHome;
+    private Location location;
     private Boolean isAnomalous;
     private String anomalyReason;
     private String collarStatus;
@@ -52,7 +50,7 @@ public class LatestPetResultDto {
             anomalyReason = String.format(
                     "Класс аномалии: %d, краткое описание: %s",
                     entity.getAnomalyClass(),
-                    entity.getAnomalyType().getDescription()
+                    entity.getAnomalyType().getFriendlyDescription()
             );
         }
 
@@ -63,7 +61,7 @@ public class LatestPetResultDto {
                 .respiratoryRate(entity.getRespiration())
                 .temperature(entity.getTemperature())
                 .activityLevel(activityLevel)
-                .distanceFromHome(entity.getDistanceFromHome())
+                .location(entity.getLocation())
                 .isAnomalous(entity.isAnomalous())
                 .anomalyReason(anomalyReason)
                 .build();

@@ -56,8 +56,8 @@ public class ModelAnalyzer {
             return buildAnomalyResult(petVital, 3, Map.of("temperature", petVital.getTemperature()));
         }
 
-        if (petVital.getDistanceFromHome() > maxDistanceFromHome) {
-            return buildAnomalyResult(petVital, 4, Map.of("distance", petVital.getDistanceFromHome()));
+        if (petVital.getLocation().getDistanceFromHome() > maxDistanceFromHome) {
+            return buildAnomalyResult(petVital, 4, Map.of("distance", petVital.getLocation().getDistanceFromHome()));
         }
 
         try {
@@ -78,7 +78,7 @@ public class ModelAnalyzer {
                     .isAnomalous(response.getAnomalyClass() != 0)
                     .anomalyClass(response.getAnomalyClass())
                     .anomalyType(AnomalyType.fromCode(response.getAnomalyClass()))
-                    .distanceFromHome(petVital.getDistanceFromHome())
+                    .location(petVital.getLocation())
                     .details(details)
                     .timestamp(Instant.now().getEpochSecond())
                     .build();
@@ -100,7 +100,7 @@ public class ModelAnalyzer {
                 .isAnomalous(true)
                 .anomalyClass(anomalyClass)
                 .anomalyType(AnomalyType.fromCode(anomalyClass))
-                .distanceFromHome(petVital.getDistanceFromHome())
+                .location(petVital.getLocation())
                 .details(details)
                 .timestamp(Instant.now().getEpochSecond())
                 .build();
@@ -115,7 +115,7 @@ public class ModelAnalyzer {
                 .isAnomalous(false)
                 .anomalyClass(0)
                 .anomalyType(AnomalyType.NORMAL)
-                .distanceFromHome(petVital.getDistanceFromHome())
+                .location(petVital.getLocation())
                 .details(Map.of("error", errorMessage))
                 .timestamp(Instant.now().getEpochSecond())
                 .build();

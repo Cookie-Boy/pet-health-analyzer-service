@@ -1,10 +1,7 @@
 package ru.sibsutis.pet_health_analyzer.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -21,7 +18,7 @@ public class PetVital {
     private Integer respiration;
     private Double temperature;
 
-    private Double distanceFromHome;
+    private Location location;
 
     private Long timestamp;
 
