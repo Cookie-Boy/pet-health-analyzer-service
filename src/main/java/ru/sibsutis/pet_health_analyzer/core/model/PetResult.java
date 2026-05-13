@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
-@Table(name = "pet_results")
+@Table(schema = "analysis", name = "pet_results")
 @Getter
 @Setter
 @NoArgsConstructor
