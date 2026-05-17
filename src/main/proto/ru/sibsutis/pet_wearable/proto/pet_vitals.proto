@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ru.sibsutis.pet_wearable.proto;
+
+option java_package = "ru.sibsutis.pet_wearable.proto";
+option java_outer_classname = "VitalDataProto";
+
+message Location {
+    double lat = 1;
+    double lon = 2;
+    double distance_from_home = 3;
+}
+
+message VitalDataMessage {
+    string pet_id = 1;
+    string species = 2;
+    string breed = 3;
+    int32 heart_rate = 4;
+    int32 respiration = 5;
+    double temperature = 6;
+    Location location = 7;
+    int64 timestamp = 8;
+}

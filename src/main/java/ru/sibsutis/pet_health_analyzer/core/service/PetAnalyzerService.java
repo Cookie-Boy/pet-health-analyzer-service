@@ -12,6 +12,7 @@ import ru.sibsutis.pet_health_analyzer.api.dto.PetResultDto;
 import ru.sibsutis.pet_health_analyzer.api.dto.RecommendationDto;
 import ru.sibsutis.pet_health_analyzer.core.model.*;
 import ru.sibsutis.pet_health_analyzer.core.repository.PetResultRepository;
+import ru.sibsutis.pet_wearable.proto.VitalDataProto;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -37,10 +38,12 @@ public class PetAnalyzerService {
     private String outboundTopic;
 
     @ServiceActivator(inputChannel = "mqttInboundChannel")
-    public void handleVitalData(Message<String> message) {
-        String payload = message.getPayload();
+    public void handleVitalData(Message<byte[]> message) {
+        byte[] payload = message.getPayload();
         try {
-            PetVital petVital = objectMapper.readValue(payload, PetVital.class);
+            VitalDataProto.VitalDataMessage protoMessage = VitalDataProto.VitalDataMessage.parseFrom(payload);
+            PetVital petVital = convertToPetVital(protoMessage);
+
             PetResult result = modelAnalyzer.analyze(petVital);
             petResultRepository.save(result);
 
@@ -298,5 +301,28 @@ public class PetAnalyzerService {
         }
 
         return recommendations;
+    }
+
+    private PetVital convertToPetVital(VitalDataProto.VitalDataMessage protoMsg) {
+        PetVital.PetVitalBuilder builder = PetVital.builder()
+                .petId(protoMsg.getPetId().isEmpty() ? null : protoMsg.getPetId())
+                .species(protoMsg.getSpecies().isEmpty() ? null : protoMsg.getSpecies())
+                .breed(protoMsg.getBreed().isEmpty() ? null : protoMsg.getBreed())
+                .heartRate(protoMsg.getHeartRate() == 0 ? null : protoMsg.getHeartRate())
+                .respiration(protoMsg.getRespiration() == 0 ? null : protoMsg.getRespiration())
+                .temperature(protoMsg.getTemperature() == 0.0 ? null : protoMsg.getTemperature())
+                .timestamp(protoMsg.getTimestamp());
+
+        if (protoMsg.hasLocation()) {
+            VitalDataProto.Location protoLoc = protoMsg.getLocation();
+            Location location = new Location(
+                    protoLoc.getLat() == 0.0 ? null : protoLoc.getLat(),
+                    protoLoc.getLon() == 0.0 ? null : protoLoc.getLon(),
+                    protoLoc.getDistanceFromHome() == 0.0 ? null : protoLoc.getDistanceFromHome()
+            );
+            builder.location(location);
+        }
+
+        return builder.build();
     }
 }
