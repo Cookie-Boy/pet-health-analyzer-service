@@ -6,6 +6,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <include file="db/changelog/create-schema.sql" relativeToChangelogFile="false"/>
-    <include file="v.1.0.1/changelog.xml" relativeToChangelogFile="true"/>
+    <include file="v.1.0.2/changelog.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

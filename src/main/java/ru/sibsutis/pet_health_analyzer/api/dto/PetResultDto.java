@@ -52,7 +52,7 @@ public class PetResultDto {
             anomalyReason = String.format(
                     "Класс аномалии: %d, краткое описание: %s",
                     entity.getAnomalyClass(),
-                    entity.getAnomalyType().getFriendlyDescription()
+                    entity.getAnomalyType().getFriendlyDescription().toLowerCase()
             );
         }
 

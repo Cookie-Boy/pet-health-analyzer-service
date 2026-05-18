@@ -318,7 +318,8 @@ public class PetAnalyzerService {
             Location location = new Location(
                     protoLoc.getLat() == 0.0 ? null : protoLoc.getLat(),
                     protoLoc.getLon() == 0.0 ? null : protoLoc.getLon(),
-                    protoLoc.getDistanceFromHome() == 0.0 ? null : protoLoc.getDistanceFromHome()
+                    protoLoc.getDistanceFromHome() == 0.0 ? null : protoLoc.getDistanceFromHome(),
+                    protoLoc.getDistanceLimit() == 0 ? null : protoLoc.getDistanceLimit()
             );
             builder.location(location);
         }

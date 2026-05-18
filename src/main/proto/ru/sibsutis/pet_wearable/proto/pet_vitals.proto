@@ -9,6 +9,7 @@ message Location {
     double lat = 1;
     double lon = 2;
     double distance_from_home = 3;
+    int32 distance_limit = 4;
 }
 
 message VitalDataMessage {

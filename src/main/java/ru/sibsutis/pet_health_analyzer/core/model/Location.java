@@ -13,4 +13,5 @@ public class Location {
     private Double lat;
     private Double lon;
     private Double distanceFromHome;
+    private Integer distanceLimit;
 }

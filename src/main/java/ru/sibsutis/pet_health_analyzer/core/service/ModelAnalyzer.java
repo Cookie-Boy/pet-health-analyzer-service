@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.sibsutis.pet_health_analyzer.api.client.PythonServiceClient;
 import ru.sibsutis.pet_health_analyzer.api.dto.PredictionDto;
+import ru.sibsutis.pet_health_analyzer.core.model.Location;
 import ru.sibsutis.pet_health_analyzer.core.model.PetResult;
 import ru.sibsutis.pet_health_analyzer.core.model.AnomalyType;
 import ru.sibsutis.pet_health_analyzer.core.model.PetVital;
@@ -39,9 +40,6 @@ public class ModelAnalyzer {
     @Value("${thresholds.temperature-min}")
     private double minTemperature;
 
-    @Value("${thresholds.distance-from-home-max}")
-    private int maxDistanceFromHome;
-
     public PetResult analyze(PetVital petVital) {
 
         if (petVital.getHeartRate() < minHeartRate || petVital.getHeartRate() > maxHeartRate) {
@@ -56,8 +54,11 @@ public class ModelAnalyzer {
             return buildAnomalyResult(petVital, 3, Map.of("temperature", petVital.getTemperature()));
         }
 
-        if (petVital.getLocation().getDistanceFromHome() > maxDistanceFromHome) {
-            return buildAnomalyResult(petVital, 4, Map.of("distance", petVital.getLocation().getDistanceFromHome()));
+        if (petVital.getLocation() != null) {
+            Location loc = petVital.getLocation();
+            if (loc.getDistanceFromHome() > loc.getDistanceLimit()) {
+                return buildAnomalyResult(petVital, 4, Map.of("distance", petVital.getLocation().getDistanceFromHome()));
+            }
         }
 
         try {

@@ -48,9 +48,9 @@ public class LatestPetResultDto {
         String anomalyReason = null;
         if (entity.isAnomalous() && entity.getAnomalyType() != null) {
             anomalyReason = String.format(
-                    "Класс аномалии: %d, краткое описание: %s",
+                    "Класс аномалии: %d, краткое описание: %s", 
                     entity.getAnomalyClass(),
-                    entity.getAnomalyType().getFriendlyDescription()
+                    entity.getAnomalyType().getFriendlyDescription().toLowerCase()
             );
         }
 
